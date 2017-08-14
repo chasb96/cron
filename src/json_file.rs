@@ -4,14 +4,15 @@ use serde_json::value::Index;
 
 use std::error::Error;
 use std::fs::File;
+use std::path::PathBuf;
 
 pub struct JsonFile {
-    path: String,
+    path: PathBuf,
     json: Value,
 }
 
 impl JsonFile {
-    pub fn new(path: String) -> Self {
+    pub fn new(path: PathBuf) -> Self {
         JsonFile {
             path: path,
             json: Value::Null,
@@ -36,15 +37,19 @@ impl JsonFile {
         self.json = json
     }
 
-    pub fn path(&self) -> &String {
+    pub fn path(&self) -> &PathBuf {
         &self.path
     }
 
-    pub fn set_path(&mut self, path: String) {
+    pub fn set_path(&mut self, path: PathBuf) {
         self.path = path
     }
 
     pub fn get<I: Index>(&self, index: I) -> Option<&Value> {
         self.json().get(index)
     }
+}
+
+pub trait FromJsonFile {
+    fn new_from_json_file(file: JsonFile) -> Self;
 }

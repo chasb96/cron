@@ -79,3 +79,7 @@ impl Runnable for Notification {
             }
     }
 }
+
+unsafe impl Send for Notification {
+    
+}

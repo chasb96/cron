@@ -24,7 +24,7 @@ fn main() {
 
     let notification = Notification::new(summary, body, icon, timeout);
 
-    let job = Job::new(notification, 10);
+    let job = Job::new(notification, 1000);
 
     job.spawn();
 

@@ -2,7 +2,6 @@ use ::run::Runnable;
 use ::thread::Threadable;
 
 use std::{ thread, time };
-use std::sync::{ Arc, Mutex };
 
 pub struct Job<R: Runnable + Send + 'static> {
     job: R,
@@ -26,7 +25,11 @@ impl<R: Runnable + Send + 'static> Threadable for Job<R> {
             loop {
                 thread::sleep(sleep);
 
-                self.job.run();
+                // TODO: Log this
+                match self.job.run() {
+                    Ok(_) => { },
+                    Err(_) => { },
+                };
             }
         });
     }

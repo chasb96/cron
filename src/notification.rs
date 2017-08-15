@@ -1,9 +1,9 @@
-use notify_rust::{ Notification as NativeNotification, NotificationHandle, Error };
+use notify_rust::Notification as NativeNotification;
 
 use ::from_value::FromValue;
 use ::run::{ Runnable, RunSuccess, RunError };
 
-use serde_json::{ Value, Number };
+use serde_json::Value;
 
 pub struct Notification {
     summary: String,
@@ -81,5 +81,5 @@ impl Runnable for Notification {
 }
 
 unsafe impl Send for Notification {
-    
+
 }

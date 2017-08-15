@@ -4,9 +4,6 @@ use serde_json::value::Index;
 use ::from_value::FromValue;
 use ::json_file::{ JsonFile, FromJsonFile };
 
-use std::error::Error;
-
-
 pub struct Config {
     config: Value,
 }

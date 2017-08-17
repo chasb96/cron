@@ -11,6 +11,7 @@ pub struct JsonFile {
     json: Value,
 }
 
+#[allow(dead_code)]
 impl JsonFile {
     pub fn new(path: PathBuf) -> Self {
         JsonFile {

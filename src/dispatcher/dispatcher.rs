@@ -9,6 +9,7 @@ pub struct Dispatcher {
 }
 
 impl Dispatcher {
+    #[allow(dead_code)]
     pub fn new(jobs: Vec<Job>) -> Self {
         Dispatcher {
             jobs: jobs

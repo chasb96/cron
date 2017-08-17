@@ -4,10 +4,12 @@ use serde_json::value::Index;
 use ::from_value::FromValue;
 use ::json_file::{ JsonFile, FromJsonFile };
 
+#[allow(dead_code)]
 pub struct Config {
     config: Value,
 }
 
+#[allow(dead_code)]
 impl Config {
     pub fn new(config: Value) -> Self {
         Config {

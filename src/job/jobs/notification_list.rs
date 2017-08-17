@@ -31,7 +31,7 @@ impl Runnable for NotificationList {
     fn run(&self) -> Result<RunSuccess, RunError> {
         match rand::thread_rng().choose(self.items()) {
             Some(notification) => {
-                notification.run();
+                notification.run()?;
 
                 Ok(RunSuccess::new(String::from("Ran random notification from list")))
             },

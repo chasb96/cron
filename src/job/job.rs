@@ -1,4 +1,3 @@
-use ::run::Runnable;
 use ::thread::Threadable;
 use ::from_value::FromValue;
 
@@ -27,10 +26,10 @@ impl Threadable for Job {
             let sleep = time::Duration::from_millis(self.interval);
 
             loop {
-                thread::sleep(sleep);
-
                 // TODO: Log this
-                self.job.run();
+                self.job.run().unwrap();
+                
+                thread::sleep(sleep);
             }
         });
     }

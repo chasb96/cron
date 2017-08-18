@@ -1,5 +1,5 @@
 [package]
-name = "notifier"
+name = "tasker"
 version = "0.1.0"
 authors = ["Charles <chasb96@gmail.com>"]
 

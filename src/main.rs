@@ -22,7 +22,7 @@ use std::env::home_dir;
 fn main() {
     let mut path = home_dir().unwrap();
 
-    path.push(".cron/config.json");
+    path.push(".cron/tasker.json");
 
     let mut config_file = JsonFile::new(path);
 

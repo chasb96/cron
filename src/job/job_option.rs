@@ -1,5 +1,6 @@
 use super::jobs::notification::Notification;
 use super::jobs::notification_list::NotificationList;
+use super::jobs::shell_command::ShellCommand;
 
 use ::run::{ Runnable, RunSuccess, RunError };
 
@@ -9,6 +10,7 @@ pub enum JobOption {
     Empty,
     Notification(Notification),
     NotificationList(NotificationList),
+    ShellCommand(ShellCommand),
 }
 
 impl JobOption {
@@ -16,6 +18,7 @@ impl JobOption {
         match self {
             &JobOption::Notification(ref n) => n.run(),
             &JobOption::NotificationList(ref nl) => nl.run(),
+            &JobOption::ShellCommand(ref sc) => sc.run(),
             _ => Ok(RunSuccess::new(String::from("No job was specified"))),
         }
     }
@@ -29,6 +32,7 @@ impl FromValue for JobOption {
         match value.get("type").unwrap_or(&Value::Null).as_str().unwrap_or("") {
             "notification" => JobOption::Notification(Notification::new_from_value(value.get("notification").unwrap_or(&Value::Null).to_owned())),
             "notification_list" => JobOption::NotificationList(NotificationList::new_from_value(value.get("notification_list").unwrap_or(&Value::Null).to_owned())),
+            "shell_command" => JobOption::ShellCommand(ShellCommand::new_from_value(value.get("shell_command").unwrap_or(&Value::Null).to_owned())),
             _ => JobOption::Empty,
         }
     }

@@ -10,9 +10,9 @@ Built in Rust to be as light-weight and efficient as possible.
 
 ## Jobs
 
-So far, cron only has 'Jobs': code that runs on an interval.
+So far, tasker only has 'Jobs': code that runs on an interval.
 
-We can note these in our `~/.cron/config.json` as `jobs` as shown below:
+We can note these in our `~/.tasker/config.json` as `jobs` as shown below:
 
 ```
 {
@@ -28,7 +28,7 @@ Every `job` has three fields: `interval`, the interval to run on in milliseconds
 
 ### Available Jobs
 
-As of right now, cron has `notification`'s, `notification_list`'s, and `system_commands`'s. 
+As of right now, tasker has `notification`'s, `notification_list`'s, and `system_commands`'s. 
 
 #### Notifications
 
@@ -46,7 +46,7 @@ A `notification` will throw a notification onto your desktop. A `notification` c
   }
 }
 ```
-Any or even all of the fields can be left blank or not even specified. Cron will use a default in it's place.
+Any or even all of the fields can be left blank or not even specified. Tasker will use a default in it's place.
 
 #### Notification Lists
 

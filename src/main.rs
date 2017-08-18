@@ -13,14 +13,18 @@ mod job;
 
 pub use job::Job;
 
-use std::path::PathBuf;
 use json_file::JsonFile;
 use dispatcher::Dispatcher;
 use from_value::FromValue;
 use std::thread::park;
+use std::env::home_dir;
 
 fn main() {
-    let mut config_file = JsonFile::new(PathBuf::from("/home/charles/.cron/config.json"));
+    let mut path = home_dir().unwrap();
+
+    path.push(".cron/config.json");
+
+    let mut config_file = JsonFile::new(path);
 
     config_file.open().unwrap();
 

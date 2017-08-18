@@ -1,4 +1,4 @@
-# Cron
+# Tasker
 
 Tool, similar to Linux' cron jobs, built in Rust, running from JSON configuration files.
 

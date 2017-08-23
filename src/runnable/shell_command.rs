@@ -1,7 +1,7 @@
 use std::process::Command;
 use ::from_value::FromValue;
 use serde_json::Value;
-use ::run::{ Runnable, RunSuccess, RunError };
+use ::runnable::{ Runnable, RunSuccess, RunError };
 
 pub struct ShellCommand {
     command: String,

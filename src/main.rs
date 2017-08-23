@@ -6,15 +6,15 @@ extern crate notify_rust;
 mod json_file;
 mod from_value;
 mod config;
-mod run;
+mod runnable;
 mod thread;
 mod dispatcher;
 mod job;
 
 pub use job::Job;
+pub use dispatcher::Dispatcher;
 
 use json_file::JsonFile;
-use dispatcher::Dispatcher;
 use from_value::FromValue;
 use std::thread::park;
 use std::env::home_dir;

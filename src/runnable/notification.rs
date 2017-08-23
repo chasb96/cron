@@ -1,7 +1,7 @@
 use notify_rust::Notification as NativeNotification;
 
 use ::from_value::FromValue;
-use ::run::{ Runnable, RunSuccess, RunError };
+use ::runnable::{ Runnable, RunSuccess, RunError };
 
 use serde_json::Value;
 

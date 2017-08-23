@@ -1,7 +1,7 @@
 extern crate rand;
 
 use ::from_value::FromValue;
-use ::run::{ Runnable, RunSuccess, RunError };
+use ::runnable::{ Runnable, RunSuccess, RunError };
 use super::notification::Notification;
 
 use rand::Rng;

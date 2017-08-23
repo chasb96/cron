@@ -1,1 +1,3 @@
 language: rust
+
+install: ./dependencies.sh

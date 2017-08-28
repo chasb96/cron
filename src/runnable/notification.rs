@@ -5,6 +5,7 @@ use ::runnable::{ Runnable, RunSuccess, RunError };
 
 use serde_json::Value;
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct Notification {
     summary: String,
     body: String,
@@ -55,14 +56,16 @@ impl Notification {
     }
 }
 
+use std::error::Error;
+
 impl FromValue for Notification {
-    fn new_from_value(value: Value) -> Self {
-        Notification {
-            summary: String::new_from_value(value.get("summary").unwrap_or(&Value::Null).to_owned()),
-            body: String::new_from_value(value.get("body").unwrap_or(&Value::Null).to_owned()),
-            icon: String::new_from_value(value.get("icon").unwrap_or(&Value::Null).to_owned()),
-            timeout: i32::new_from_value(value.get("timeout").unwrap_or(&Value::Null).to_owned()),
-        }
+    fn new_from_value(value: Value) -> Result<Self, Box<Error>> {
+        Ok(Notification {
+            summary: String::new_from_value(value.get("summary").unwrap_or(&Value::Null).to_owned()).unwrap(),
+            body: String::new_from_value(value.get("body").unwrap_or(&Value::Null).to_owned()).unwrap(),
+            icon: String::new_from_value(value.get("icon").unwrap_or(&Value::Null).to_owned()).unwrap(),
+            timeout: i32::new_from_value(value.get("timeout").unwrap_or(&Value::Null).to_owned()).unwrap(),
+        })
     }
 }
 

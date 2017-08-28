@@ -26,11 +26,13 @@ impl Config {
     }
 }
 
+use std::error::Error;
+
 impl FromValue for Config {
-    fn new_from_value(config: Value) -> Self {
-        Config {
+    fn new_from_value(config: Value) -> Result<Self, Box<Error>> {
+        Ok(Config {
             config: config,
-        }
+        })
     }
 }
 

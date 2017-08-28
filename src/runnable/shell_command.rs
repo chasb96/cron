@@ -3,6 +3,9 @@ use ::from_value::FromValue;
 use serde_json::Value;
 use ::runnable::{ Runnable, RunSuccess, RunError };
 
+use std::error::Error;
+
+#[derive(PartialEq, Debug, Eq)]
 pub struct ShellCommand {
     command: String,
     args: Vec<String>,
@@ -18,7 +21,7 @@ impl ShellCommand {
 }
 
 impl FromValue for ShellCommand {
-    fn new_from_value(value: Value) -> Self {
+    fn new_from_value(value: Value) -> Result<Self, Box<Error>> {
         let args = value.get("args")
                         .unwrap_or(&Value::Null)
                         .as_array()
@@ -29,10 +32,10 @@ impl FromValue for ShellCommand {
             String::from(arg.as_str().unwrap_or(""))
         }).collect();
 
-        ShellCommand {
+        Ok(ShellCommand {
             command: String::from(value.get("command").unwrap_or(&Value::Null).as_str().unwrap_or("")),
             args: args_as_stirng,
-        }
+        })
     }
 }
 

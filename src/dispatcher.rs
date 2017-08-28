@@ -4,6 +4,8 @@ use serde_json::Value;
 
 use ::thread::Threadable;
 
+use std::error::Error;
+
 pub struct Dispatcher {
     jobs: Vec<Job>,
 }
@@ -26,18 +28,18 @@ impl Dispatcher {
 use ::from_value::FromValue;
 
 impl FromValue for Dispatcher {
-    fn new_from_value(value: Value) -> Self {
+    fn new_from_value(value: Value) -> Result<Self, Box<Error>> {
         let jobs = value.get("jobs")
                         .unwrap_or(&Value::Null)
                         .as_array()
                         .unwrap_or(&Vec::new())
                         .into_iter()
                         .map(| job | {
-                            Job::new_from_value(job.to_owned())
+                            Job::new_from_value(job.to_owned()).unwrap()
                         }).collect();
 
-        Dispatcher {
+        Ok(Dispatcher {
             jobs: jobs,
-        }
+        })
     }
 }

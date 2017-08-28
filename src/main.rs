@@ -1,4 +1,6 @@
 extern crate serde;
+
+#[macro_use]
 extern crate serde_json;
 extern crate rand;
 extern crate notify_rust;
@@ -30,7 +32,7 @@ fn main() {
 
     let json = config_file.json().to_owned();
 
-    let dispatcher = Dispatcher::new_from_value(json);
+    let dispatcher = Dispatcher::new_from_value(json).unwrap();
 
     dispatcher.dispatch();
 

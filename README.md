@@ -1,5 +1,7 @@
 # Tasker
 
+[![Travis Build Status](https://travis-ci.org/chasb96/tasker.svg?branch=master)](https://travis-ci.org/chasb96/tasker)
+
 Tool, similar to Linux' cron jobs, built in Rust, running from JSON configuration files.
 
 Aimed at using JSON files and a filesystem to allow for larger amounts of work and much more configurable options.

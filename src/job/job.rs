@@ -45,3 +45,16 @@ impl FromValue for Job {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use ::from_value::FromValue;
+    use ::job::Job;
+
+    #[test]
+    fn test_from_value() {
+        let value = json!({ "type": "empty" });
+
+        Job::new_from_value(value).unwrap_or_else( | _ | panic!("Could not create job"));
+    }
+}

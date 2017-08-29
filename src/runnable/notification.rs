@@ -83,6 +83,17 @@ impl Runnable for Notification {
     }
 }
 
-unsafe impl Send for Notification {
+unsafe impl Send for Notification { }
 
+#[cfg(test)]
+mod tests {
+    use ::from_value::FromValue;
+    use ::runnable::notification::Notification;
+
+    #[test]
+    fn test_from_value() {
+        let notification = json!({});
+
+        Notification::new_from_value(notification).unwrap();
+    }
 }

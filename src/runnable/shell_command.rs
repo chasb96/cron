@@ -50,6 +50,17 @@ impl Runnable for ShellCommand {
     }
 }
 
-unsafe impl Send for ShellCommand {
+unsafe impl Send for ShellCommand { }
 
+#[cfg(test)]
+mod tests {
+    use ::from_value::FromValue;
+    use ::runnable::shell_command::ShellCommand;
+
+    #[test]
+    fn test_from_value() {
+        let shell_command = json!({});
+
+        ShellCommand::new_from_value(shell_command).unwrap();
+    }
 }

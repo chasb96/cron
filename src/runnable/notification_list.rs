@@ -60,3 +60,16 @@ impl FromValue for NotificationList {
 }
 
 unsafe impl Send for NotificationList { }
+
+#[cfg(test)]
+mod tests {
+    use ::from_value::FromValue;
+    use ::runnable::notification_list::NotificationList;
+
+    #[test]
+    fn test_from_value() {
+        let notification_list = json!([]);
+
+        NotificationList::new_from_value(notification_list).unwrap();
+    }
+}

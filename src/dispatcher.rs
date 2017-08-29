@@ -43,3 +43,16 @@ impl FromValue for Dispatcher {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use ::from_value::FromValue;
+    use ::dispatcher::Dispatcher;
+
+    #[test]
+    fn test_from_value() {
+        let dispatcher = json!({});
+
+        Dispatcher::new_from_value(dispatcher).unwrap();
+    }
+}

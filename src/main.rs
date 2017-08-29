@@ -1,5 +1,7 @@
 extern crate serde;
 
+// The macro is only used in the tests, but I can't remove it for normal build
+#[allow(unused)]
 #[macro_use]
 extern crate serde_json;
 extern crate rand;

@@ -6,6 +6,7 @@ extern crate serde;
 extern crate serde_json;
 extern crate rand;
 extern crate notify_rust;
+extern crate notify;
 
 mod json_file;
 mod from_value;
@@ -14,6 +15,7 @@ mod runnable;
 mod thread;
 mod dispatcher;
 mod job;
+mod listener;
 
 pub use job::Job;
 pub use dispatcher::Dispatcher;

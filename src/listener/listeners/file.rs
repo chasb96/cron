@@ -24,7 +24,7 @@ impl Runnable for File {
     fn run(&self) -> Result<RunSuccess, RunError> {
         let (rx, tx) = channel();
 
-        let mut watcher: RecommendedWatcher = match Watcher::new(rx, Duration::from_secs(5)) {
+        let mut watcher: RecommendedWatcher = match Watcher::new(rx, Duration::from_millis(10)) {
             Ok(w) => w,
             Err(_) => return Err(RunError::new(String::from("Failed to create file watcher"))),
         };

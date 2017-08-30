@@ -1,4 +1,5 @@
 use ::Job;
+use ::Listener;
 
 use serde_json::Value;
 
@@ -8,19 +9,25 @@ use std::error::Error;
 
 pub struct Dispatcher {
     jobs: Vec<Job>,
+    listeners: Vec<Listener>
 }
 
 impl Dispatcher {
     #[allow(dead_code)]
-    pub fn new(jobs: Vec<Job>) -> Self {
+    pub fn new(jobs: Vec<Job>, listeners: Vec<Listener>) -> Self {
         Dispatcher {
-            jobs: jobs
+            jobs: jobs,
+            listeners: listeners
         }
     }
 
     pub fn dispatch(self) {
         for job in self.jobs {
             job.spawn();
+        }
+
+        for listener in self.listeners {
+            listener.spawn();
         }
     }
 }
@@ -38,8 +45,18 @@ impl FromValue for Dispatcher {
                             Job::new_from_value(job.to_owned()).unwrap()
                         }).collect();
 
+        let listeners = value.get("listeners")
+                        .unwrap_or(&Value::Null)
+                        .as_array()
+                        .unwrap_or(&Vec::new())
+                        .into_iter()
+                        .map(| listener | {
+                            Listener::new_from_value(listener.to_owned()).unwrap()
+                        }).collect();
+
         Ok(Dispatcher {
             jobs: jobs,
+            listeners: listeners,
         })
     }
 }

@@ -18,6 +18,7 @@ mod job;
 mod listener;
 
 pub use job::Job;
+pub use listener::Listener;
 pub use dispatcher::Dispatcher;
 
 use json_file::JsonFile;

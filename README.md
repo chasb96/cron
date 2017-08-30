@@ -12,7 +12,7 @@ Built in Rust to be as light-weight and efficient as possible.
 
 ## Jobs
 
-So far, tasker only has 'Jobs': code that runs on an interval.
+Jobs run on an interval: the item specified will run repeatedly, waiting the specified amount of time between each run.
 
 We can note these in our `~/.tasker/config.json` as `jobs` as shown below:
 
@@ -30,7 +30,7 @@ Every `job` has three fields: `interval`, the interval to run on in milliseconds
 
 ### Available Jobs
 
-As of right now, tasker has `notification`'s, `notification_list`'s, and `system_commands`'s. 
+As of right now, tasker has `notification`'s, `notification_list`'s, and `system_commands`'s. These will be added as needed or requested.
 
 #### Notifications
 
@@ -87,7 +87,46 @@ Example:
 
 `args` can be left blank or not specified. If `args` are not specified, it will just run the command without any args.
 
+## Listeners
+
+Listeners wait for a specific action to happen within your machine.
+
+We can note these in our `~/.tasker/config.json` as `listeners` as shown below:
+
+```
+{
+  "listeners": [
+    ... our listeners go here
+  ]
+}
+```
+
+This will list out the listeners to be run, and their details.
+
+### Available Listeners
+
+Tasker also has `file` listeners. These will be added as needed or requested.
+
+## Files
+
+A `file` listener does just what it sounds, waits for an event or change on a specific file, and performs an action in response. 
+
+It only has two fields, but is a little more complex than Jobs: it actually takes a job as it's "action in response."
+
+Example:
+```
+{
+  "type": "file",
+  "file": {
+    "path": "path/to/file",
+    "job": {
+      ... our job goes here
+    }
+  }
+}
+```
+
 ## Other
 
-In the future it is planned to include 'Events', jobs that run at a specific time rather than on an interval, and 'Listeners', jobs that run when a specific action occurs (such as an application opening or file being modified).
+In the future it is planned to include 'Events', jobs that run at a specific time rather than on an interval.
 

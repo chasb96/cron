@@ -65,16 +65,16 @@ Example:
 }
 ```
 
-#### System Commands
+#### Shell Commands
 
-A `system_command` plain and simple just runs commands as if it were in a terminal. It has two fields: `command`, and `args`.
+A `shell_command` plain and simple just runs commands as if it were in a terminal. It has two fields: `command`, and `args`.
 Example:
 
 ```
 {
   "interval": 1000,
-  "type": "system_command",
-  "system_command": {
+  "type": "shell_command",
+  "shell_command": {
     "command": "git",
     "args": [
       "pull",

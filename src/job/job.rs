@@ -41,7 +41,7 @@ impl FromValue for Job {
     fn new_from_value(value: Value) -> Result<Self, Box<Error>> {
         Ok(Job {
             interval: value.get("interval").unwrap_or(&Value::Null).as_u64().unwrap_or(1000),
-            job:  JobOption::new_from_value(value)?,
+            job:  JobOption::new_from_value(json!({ "type": "eric" }))?,
         })
     }
 }

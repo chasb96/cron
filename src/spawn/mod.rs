@@ -3,4 +3,10 @@ pub use self::spawn::Spawn;
 mod command;
 mod spawn;
 
-pub trait Spawns {}
+use std::error::Error;
+
+pub trait Spawns {
+    fn default() -> Self;
+
+    fn call(&self) -> Result<(), Box<Error>>;
+}

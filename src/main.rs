@@ -1,4 +1,6 @@
 extern crate serde;
+extern crate tokio;
+
 #[macro_use]
 extern crate serde_derive;
 #[cfg(test)]

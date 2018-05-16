@@ -1,4 +1,8 @@
+use std::time::{Duration, Instant};
 use timer::Timer;
+use tokio;
+use tokio::prelude::*;
+use tokio::timer::{Delay, Error};
 
 /// Struct to allow a `Timer` dependent to run once and only once.
 ///
@@ -11,7 +15,7 @@ pub struct Once {
     /// How long to wait before running in `ms`.
     /// Defaults to `0`.
     #[serde(default)]
-    delay: u32,
+    delay: u64,
 }
 
 impl Timer for Once {
@@ -24,6 +28,19 @@ impl Timer for Once {
     /// ```
     fn default() -> Self {
         Once { delay: 0 }
+    }
+
+    /// Call the dependent on `Once`.
+    ///
+    /// Returns the `Result` of the dependent.
+    fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
+        let time = Instant::now() + Duration::from_millis(self.delay);
+
+        let call = Delay::new(time)
+            .and_then(move |_| f())
+            .map_err(|e| panic!("Failed to boot `Once` instance: {}", e));
+
+        tokio::run(call);
     }
 }
 

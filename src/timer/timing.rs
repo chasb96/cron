@@ -4,6 +4,11 @@ use timer::once::Once;
 /// `Enum` wrapping all the `Timer`s together.
 ///
 /// This derives interior `Timer`s.
+/// We go down this list until we find one we can derive. We start with the most amount of information given.
+/// This behavior allows it to "fall" down the options until it finds a `Timer` that works.
+///
+/// All `Timer`s *must* impl the `Timer` trait.
+///
 /// Derive precedence is as follows:
 ///   * Interval
 ///   * Once

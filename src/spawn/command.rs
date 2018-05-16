@@ -1,9 +1,6 @@
 use spawn::Spawns;
-use timer::Timing;
 
 #[derive(Deserialize)]
-pub struct Command {
-    timing: Timing,
-}
+pub struct Command {}
 
 impl Spawns for Command {}

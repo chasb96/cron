@@ -1,5 +1,7 @@
+use timer::Timer;
 use timer::interval::Interval;
 use timer::once::Once;
+use tokio::timer::Error;
 
 /// `Enum` wrapping all the `Timer`s together.
 ///
@@ -17,6 +19,19 @@ use timer::once::Once;
 pub enum Timing {
     Interval(Interval),
     Once(Once),
+}
+
+impl Timer for Timing {
+    fn default() -> Self {
+        Timing::Once(Once::default())
+    }
+
+    fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
+        match self {
+            Timing::Interval(interval) => interval.call(f),
+            Timing::Once(once) => once.call(f),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -72,5 +87,12 @@ mod tests {
         let actual = Timing::Interval(Interval::default());
 
         assert_eq!(derived, actual);
+    }
+
+    #[test]
+    fn call() {
+        let derived: Timing = Timing::default();
+
+        derived.call(Box::new(|| Ok(())));
     }
 }

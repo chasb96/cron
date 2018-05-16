@@ -42,7 +42,7 @@ impl Timer for Interval {
 
         let call = TokioInterval::new(time, Duration::from_millis(self.interval))
             .for_each(move |_| f())
-            .map_err(|e| panic!("Failed to boot `Interval` instance: {}", e));
+            .map_err(|e| panic!("Failed to keep `Interval` instance: {}", e));
 
         tokio::run(call);
     }
@@ -52,6 +52,7 @@ impl Timer for Interval {
 mod tests {
     use super::*;
     use serde_json;
+    use tokio::timer::Error;
 
     #[test]
     fn with_delay() {
@@ -78,5 +79,12 @@ mod tests {
         let actual = Interval::default();
 
         assert_eq!(derived, actual);
+    }
+
+    #[test]
+    fn call() {
+        let interval = Interval::default();
+
+        interval.call(Box::new(|| Err(Error::shutdown())));
     }
 }

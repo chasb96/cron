@@ -36,7 +36,7 @@ impl Timer for Once {
 
         let call = Delay::new(time)
             .and_then(move |_| f())
-            .map_err(|e| panic!("Failed to boot `Once` instance: {}", e));
+            .map_err(|e| panic!("Failed to keep `Once` instance: {}", e));
 
         tokio::run(call);
     }
@@ -67,5 +67,12 @@ mod tests {
         let actual = Once::default();
 
         assert_eq!(derived, actual);
+    }
+
+    #[test]
+    fn call() {
+        let once = Once::default();
+
+        once.call(Box::new(|| Ok(())));
     }
 }

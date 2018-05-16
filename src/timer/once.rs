@@ -48,7 +48,7 @@ mod tests {
     use serde_json;
 
     #[test]
-    fn with_delay() {
+    fn test_with_delay() {
         let derived: Once = serde_json::from_str(
             r#"{
                 "delay": 0
@@ -61,7 +61,7 @@ mod tests {
     }
 
     #[test]
-    fn without_delay() {
+    fn test_without_delay() {
         let derived: Once = serde_json::from_str(r#"{}"#).unwrap();
 
         let actual = Once::default();
@@ -70,7 +70,7 @@ mod tests {
     }
 
     #[test]
-    fn call() {
+    fn test_call() {
         let once = Once::default();
 
         once.call(Box::new(|| Ok(())));

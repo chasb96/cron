@@ -55,7 +55,7 @@ mod tests {
     use tokio::timer::Error;
 
     #[test]
-    fn with_delay() {
+    fn test_with_delay() {
         let derived: Interval = serde_json::from_str(
             r#"{
                 "delay": 0,
@@ -69,7 +69,7 @@ mod tests {
     }
 
     #[test]
-    fn without_delay() {
+    fn test_without_delay() {
         let derived: Interval = serde_json::from_str(
             r#"{
                 "interval": 1000
@@ -82,7 +82,7 @@ mod tests {
     }
 
     #[test]
-    fn call() {
+    fn test_call() {
         let interval = Interval::default();
 
         interval.call(Box::new(|| Err(Error::shutdown())));

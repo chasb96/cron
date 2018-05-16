@@ -45,7 +45,7 @@ mod tests {
     use timer::Timer;
 
     #[test]
-    fn once_with_delay() {
+    fn test_once_with_delay() {
         let derived: Timing = serde_json::from_str(
             r#"{
                 "delay": 0
@@ -58,7 +58,7 @@ mod tests {
     }
 
     #[test]
-    fn once_without_delay() {
+    fn test_once_without_delay() {
         let derived: Timing = serde_json::from_str(r#"{}"#).unwrap();
 
         let actual = Timing::Once(Once::default());
@@ -67,7 +67,7 @@ mod tests {
     }
 
     #[test]
-    fn interval_with_delay() {
+    fn test_interval_with_delay() {
         let derived: Timing = serde_json::from_str(
             r#"{
                 "delay": 0,
@@ -81,7 +81,7 @@ mod tests {
     }
 
     #[test]
-    fn interval_without_delay() {
+    fn test_interval_without_delay() {
         let derived: Timing = serde_json::from_str(
             r#"{
                 "interval": 1000
@@ -94,7 +94,7 @@ mod tests {
     }
 
     #[test]
-    fn call() {
+    fn test_call() {
         let derived: Timing = Timing::default();
 
         derived.call(Box::new(|| Ok(())));

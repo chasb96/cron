@@ -17,5 +17,6 @@ pub trait Timer {
     /// Returns the default of the `Timer` instance.
     fn default() -> Self;
 
+    /// Calls the dependent according to the `Timer` instance.
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>);
 }

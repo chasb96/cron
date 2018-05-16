@@ -31,8 +31,6 @@ impl Timer for Once {
     }
 
     /// Call the dependent on `Once`.
-    ///
-    /// Returns the `Result` of the dependent.
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
         let time = Instant::now() + Duration::from_millis(self.delay);
 

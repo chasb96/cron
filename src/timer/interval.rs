@@ -37,8 +37,6 @@ impl Timer for Interval {
     }
 
     /// Call the dependent on `Timer`.
-    ///
-    /// Returns the `Result` of the dependent.
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
         let time = Instant::now() + Duration::from_millis(self.delay);
 

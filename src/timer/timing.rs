@@ -22,11 +22,15 @@ pub enum Timing {
 }
 
 impl Timer for Timing {
+    /// Create a default `Timer`
     fn default() -> Self {
         Timing::Once(Once::default())
     }
 
+    /// Call dependent on `Timing`
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
+        // Just call the variant:
+        // All `Timing` variants must impl `Timer`, so we just use `.call(f)` on all variants
         match self {
             Timing::Interval(interval) => interval.call(f),
             Timing::Once(once) => once.call(f),

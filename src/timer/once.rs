@@ -1,6 +1,6 @@
+use runtime::RUNTIME as Runtime;
 use std::time::{Duration, Instant};
 use timer::Times;
-use tokio;
 use tokio::prelude::*;
 use tokio::timer::{Delay, Error};
 
@@ -38,7 +38,7 @@ impl Times for Once {
             .and_then(move |_| f())
             .map_err(|e| panic!("Failed to keep `Once` instance: {}", e));
 
-        tokio::run(call);
+        Runtime.lock().unwrap().spawn(call);
     }
 }
 

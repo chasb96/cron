@@ -2,14 +2,11 @@ extern crate serde;
 extern crate tokio;
 
 #[macro_use]
-extern crate lazy_static;
-#[macro_use]
 extern crate serde_derive;
 #[cfg(test)]
 extern crate serde_json;
 
 mod builder;
-mod runtime;
 mod spawn;
 mod timer;
 

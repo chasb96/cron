@@ -1,21 +1,39 @@
 use builder::Builds;
 use spawn::{Spawn, Spawns};
 use timer::{Timer, Times};
+use tokio::runtime::Runtime;
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Worker {
     #[serde(flatten)]
-    when: Timer,
+    pub timer: Timer,
 
     #[serde(flatten)]
-    what: Spawn,
+    pub spawn: Spawn,
 }
 
 impl Builds for Worker {
+    fn build(self, runtime: &mut Runtime) {
+        let spawn = self.spawn.clone();
+
+        self.timer.time(runtime, move || spawn.spawn());
+    }
+}
+
+impl Default for Worker {
     fn default() -> Self {
         Self {
-            when: Timer::default(),
-            what: Spawn::default(),
+            timer: Timer::default(),
+            spawn: Spawn::default(),
+        }
+    }
+}
+
+impl Clone for Worker {
+    fn clone(&self) -> Self {
+        Self {
+            timer: self.timer.clone(),
+            spawn: self.spawn.clone(),
         }
     }
 }
@@ -64,8 +82,8 @@ mod tests {
         ).unwrap();
 
         let actual = Worker {
-            when: Timer::Interval(Interval::default()),
-            what: Spawn::default(),
+            timer: Timer::Interval(Interval::default()),
+            spawn: Spawn::default(),
         };
 
         assert_eq!(derived, actual);
@@ -81,10 +99,19 @@ mod tests {
         ).unwrap();
 
         let actual = Worker {
-            when: Timer::Interval(Interval::default()),
-            what: Spawn::default(),
+            timer: Timer::Interval(Interval::default()),
+            spawn: Spawn::default(),
         };
 
         assert_eq!(derived, actual);
+    }
+
+    #[test]
+    fn test_call() {
+        let mut runtime = Runtime::new().unwrap();
+
+        let worker = Worker::default();
+
+        worker.build(&mut runtime);
     }
 }

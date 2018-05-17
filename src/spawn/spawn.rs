@@ -16,16 +16,25 @@ pub enum Spawn {
 }
 
 impl Spawns for Spawn {
-    /// Create a default `Spawn`
+    /// Call the `Spawn`
+    fn spawn(&self) -> Result<(), Box<Error>> {
+        // All vartiants impl `Spawns`, we just map each variant to `.call()`.
+        match self {
+            Spawn::Command(command) => command.spawn(),
+        }
+    }
+}
+
+impl Default for Spawn {
     fn default() -> Self {
         Spawn::Command(Command::default())
     }
+}
 
-    /// Call the `Spawn`
-    fn call(&self) -> Result<(), Box<Error>> {
-        // All vartiants impl `Spawns`, we just map each variant to `.call()`.
+impl Clone for Spawn {
+    fn clone(&self) -> Self {
         match self {
-            Spawn::Command(command) => command.call(),
+            Spawn::Command(command) => Spawn::Command(command.clone()),
         }
     }
 }
@@ -64,8 +73,8 @@ mod tests {
 
     #[test]
     fn call() {
-        let derived: Spawn = Spawn::default();
+        let result = Spawn::default().spawn();
 
-        derived.call().unwrap();
+        assert!(result.is_ok())
     }
 }

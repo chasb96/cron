@@ -1,7 +1,8 @@
+use std::error::Error;
 use timer::Times;
 use timer::interval::Interval;
 use timer::once::Once;
-use tokio::timer::Error;
+use tokio::runtime::Runtime;
 
 /// `Enum` wrapping all the `Times`s together.
 ///
@@ -22,18 +23,31 @@ pub enum Timer {
 }
 
 impl Times for Timer {
-    /// Create a default `Times`
-    fn default() -> Self {
-        Timer::Once(Once::default())
-    }
-
     /// Call dependent on `Timer`
-    fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
+    fn time<F>(&self, runtime: &mut Runtime, f: F)
+    where
+        F: Fn() -> Result<(), Box<Error>> + Send + 'static,
+    {
         // Just call the variant:
         // All `Timer` variants must impl `Times`, so we just use `.call(f)` on all variants
         match self {
-            Timer::Interval(interval) => interval.call(f),
-            Timer::Once(once) => once.call(f),
+            Timer::Interval(interval) => interval.time(runtime, f),
+            Timer::Once(once) => once.time(runtime, f),
+        }
+    }
+}
+
+impl Default for Timer {
+    fn default() -> Self {
+        Timer::Once(Once::default())
+    }
+}
+
+impl Clone for Timer {
+    fn clone(&self) -> Self {
+        match self {
+            Timer::Interval(interval) => Timer::Interval(interval.clone()),
+            Timer::Once(once) => Timer::Once(once.clone()),
         }
     }
 }
@@ -95,8 +109,10 @@ mod tests {
 
     #[test]
     fn test_call() {
+        let mut runtime = Runtime::new().unwrap();
+
         let derived: Timer = Timer::default();
 
-        derived.call(Box::new(|| Ok(())));
+        derived.time(&mut runtime, || Ok(()));
     }
 }

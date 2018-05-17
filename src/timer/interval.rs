@@ -1,8 +1,10 @@
-use runtime::RUNTIME as Runtime;
+use std::error::Error;
+use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::time::{Duration, Instant};
 use timer::Times;
 use tokio::prelude::*;
-use tokio::timer::{Error, Interval as TokioInterval};
+use tokio::runtime::Runtime;
+use tokio::timer::Interval as TokioInterval;
 
 /// Struct to allow a `Times` dependent to run repeatedly on an interval.
 ///
@@ -20,31 +22,63 @@ pub struct Interval {
     interval: u64,
 }
 
+#[derive(Debug)]
+struct IntervalError;
+
+impl Display for IntervalError {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "Failed to keep `Interval` instance")
+    }
+}
+
+impl Error for IntervalError {
+    fn description(&self) -> &str {
+        "Failed to keep `Interval` instance"
+    }
+}
+
+impl Interval {
+    pub fn delay(&self) -> Instant {
+        Instant::now() + Duration::from_millis(self.delay)
+    }
+
+    pub fn interval(&self) -> Duration {
+        Duration::from_millis(self.interval)
+    }
+}
+
 impl Times for Interval {
-    /// Create a default `Interval` `Times`.
-    ///
-    /// ```
-    /// Interval {
-    ///     delay: 0,
-    ///     interval: 1000
-    /// }
-    /// ```
+    /// Call the dependent on `Times`.
+    fn time<F>(&self, runtime: &mut Runtime, f: F)
+    where
+        F: Fn() -> Result<(), Box<Error>> + Send + 'static,
+    {
+        let call = TokioInterval::new(self.delay(), self.interval())
+            .for_each(move |_| {
+                f().unwrap();
+                Ok(())
+            })
+            .map_err(|e| println!("{}: {}", IntervalError.description(), e));
+
+        runtime.spawn(call);
+    }
+}
+
+impl Default for Interval {
     fn default() -> Self {
         Self {
             delay: 0,
             interval: 1000,
         }
     }
+}
 
-    /// Call the dependent on `Times`.
-    fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
-        let time = Instant::now() + Duration::from_millis(self.delay);
-
-        let call = TokioInterval::new(time, Duration::from_millis(self.interval))
-            .for_each(move |_| f())
-            .map_err(|e| panic!("Failed to keep `Interval` instance: {}", e));
-
-        Runtime.lock().unwrap().spawn(call);
+impl Clone for Interval {
+    fn clone(&self) -> Self {
+        Self {
+            delay: self.delay,
+            interval: self.interval,
+        }
     }
 }
 
@@ -52,7 +86,6 @@ impl Times for Interval {
 mod tests {
     use super::*;
     use serde_json;
-    use tokio::timer::Error;
 
     #[test]
     fn test_with_delay() {
@@ -83,8 +116,10 @@ mod tests {
 
     #[test]
     fn test_call() {
+        let mut runtime = Runtime::new().unwrap();
+
         let interval = Interval::default();
 
-        interval.call(Box::new(|| Err(Error::shutdown())));
+        interval.time(&mut runtime, || Ok(()));
     }
 }

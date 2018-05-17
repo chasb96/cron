@@ -20,26 +20,29 @@ pub struct Command {
 }
 
 impl Spawns for Command {
-    /// Create a default `Command` `Spawn`.
-    ///
-    /// ```
-    /// Command {
-    ///     command: "echo",
-    ///     args: []
-    /// }
-    /// ```
+    /// Call the `Command`/Tell the `Command` to execute
+    fn spawn(&self) -> Result<(), Box<Error>> {
+        Cmd::new(&self.command).args(&self.args).spawn()?;
+
+        Ok(())
+    }
+}
+
+impl Default for Command {
     fn default() -> Self {
         Self {
             command: String::from("echo"),
             args: Vec::new(),
         }
     }
+}
 
-    /// Call the `Command`/Tell the `Command` to execute
-    fn call(&self) -> Result<(), Box<Error>> {
-        Cmd::new(&self.command).args(&self.args).spawn()?;
-
-        Ok(())
+impl Clone for Command {
+    fn clone(&self) -> Self {
+        Self {
+            command: self.command.clone(),
+            args: self.args.clone(),
+        }
     }
 }
 
@@ -77,7 +80,7 @@ mod tests {
 
     #[test]
     fn test_call() {
-        let result = Command::default().call();
+        let result = Command::default().spawn();
 
         assert!(result.is_ok())
     }

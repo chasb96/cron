@@ -1,22 +1,22 @@
-pub use self::timing::Timing;
+pub use self::timer::Timer;
 
-mod interval;
-mod once;
-mod timing;
+pub mod interval;
+pub mod once;
+pub mod timer;
 
 use tokio::timer::Error;
 
-/// Trait outlining the needs for a `Timer`.
+/// Trait outlining the needs for a `Times`.
 ///
-/// Any `Timer` must impl this trait.
+/// Any `Times` must impl this trait.
 /// However, since this cannot be enforced by the compiler, we will need to enforce this by hand.
-pub trait Timer {
-    /// Create a default `Timer` instance.
+pub trait Times {
+    /// Create a default `Times` instance.
     /// This instructs how to derive details when details are missing.
     ///
-    /// Returns the default of the `Timer` instance.
+    /// Returns the default of the `Times` instance.
     fn default() -> Self;
 
-    /// Calls the dependent according to the `Timer` instance.
+    /// Calls the dependent according to the `Times` instance.
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>);
 }

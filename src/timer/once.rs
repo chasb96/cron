@@ -1,15 +1,15 @@
 use std::time::{Duration, Instant};
-use timer::Timer;
+use timer::Times;
 use tokio;
 use tokio::prelude::*;
 use tokio::timer::{Delay, Error};
 
-/// Struct to allow a `Timer` dependent to run once and only once.
+/// Struct to allow a `Times` dependent to run once and only once.
 ///
 /// `Once` should be derived when:
 ///   * No specifications are given
 ///   * When only a delay is given
-///   * Fallback when no other `Timer`s can be derived
+///   * Fallback when no other `Times`s can be derived
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Once {
     /// How long to wait before running in `ms`.
@@ -18,8 +18,8 @@ pub struct Once {
     delay: u64,
 }
 
-impl Timer for Once {
-    /// Create a default `Once` `Timer`.
+impl Times for Once {
+    /// Create a default `Once` `Times`.
     ///
     /// ```
     /// Once {

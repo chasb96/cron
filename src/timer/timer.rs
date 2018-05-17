@@ -1,39 +1,39 @@
-use timer::Timer;
+use timer::Times;
 use timer::interval::Interval;
 use timer::once::Once;
 use tokio::timer::Error;
 
-/// `Enum` wrapping all the `Timer`s together.
+/// `Enum` wrapping all the `Times`s together.
 ///
-/// This derives interior `Timer`s.
+/// This derives interior `Times`s.
 /// We go down this list until we find one we can derive. We start with the most amount of information given.
-/// This behavior allows it to "fall" down the options until it finds a `Timer` that works.
+/// This behavior allows it to "fall" down the options until it finds a `Times` that works.
 ///
-/// All `Timer`s *must* impl the `Timer` trait.
+/// All `Times`s *must* impl the `Times` trait.
 ///
 /// Derive precedence is as follows:
 ///   * Interval
 ///   * Once
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(untagged)]
-pub enum Timing {
+pub enum Timer {
     Interval(Interval),
     Once(Once),
 }
 
-impl Timer for Timing {
-    /// Create a default `Timer`
+impl Times for Timer {
+    /// Create a default `Times`
     fn default() -> Self {
-        Timing::Once(Once::default())
+        Timer::Once(Once::default())
     }
 
-    /// Call dependent on `Timing`
+    /// Call dependent on `Timer`
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
         // Just call the variant:
-        // All `Timing` variants must impl `Timer`, so we just use `.call(f)` on all variants
+        // All `Timer` variants must impl `Times`, so we just use `.call(f)` on all variants
         match self {
-            Timing::Interval(interval) => interval.call(f),
-            Timing::Once(once) => once.call(f),
+            Timer::Interval(interval) => interval.call(f),
+            Timer::Once(once) => once.call(f),
         }
     }
 }
@@ -42,60 +42,60 @@ impl Timer for Timing {
 mod tests {
     use super::*;
     use serde_json;
-    use timer::Timer;
+    use timer::Times;
 
     #[test]
     fn test_once_with_delay() {
-        let derived: Timing = serde_json::from_str(
+        let derived: Timer = serde_json::from_str(
             r#"{
                 "delay": 0
             }"#,
         ).unwrap();
 
-        let actual = Timing::Once(Once::default());
+        let actual = Timer::Once(Once::default());
 
         assert_eq!(derived, actual);
     }
 
     #[test]
     fn test_once_without_delay() {
-        let derived: Timing = serde_json::from_str(r#"{}"#).unwrap();
+        let derived: Timer = serde_json::from_str(r#"{}"#).unwrap();
 
-        let actual = Timing::Once(Once::default());
+        let actual = Timer::Once(Once::default());
 
         assert_eq!(derived, actual);
     }
 
     #[test]
     fn test_interval_with_delay() {
-        let derived: Timing = serde_json::from_str(
+        let derived: Timer = serde_json::from_str(
             r#"{
                 "delay": 0,
                 "interval": 1000
             }"#,
         ).unwrap();
 
-        let actual = Timing::Interval(Interval::default());
+        let actual = Timer::Interval(Interval::default());
 
         assert_eq!(derived, actual);
     }
 
     #[test]
     fn test_interval_without_delay() {
-        let derived: Timing = serde_json::from_str(
+        let derived: Timer = serde_json::from_str(
             r#"{
                 "interval": 1000
             }"#,
         ).unwrap();
 
-        let actual = Timing::Interval(Interval::default());
+        let actual = Timer::Interval(Interval::default());
 
         assert_eq!(derived, actual);
     }
 
     #[test]
     fn test_call() {
-        let derived: Timing = Timing::default();
+        let derived: Timer = Timer::default();
 
         derived.call(Box::new(|| Ok(())));
     }

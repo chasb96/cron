@@ -1,10 +1,10 @@
 use std::time::{Duration, Instant};
-use timer::Timer;
+use timer::Times;
 use tokio;
 use tokio::prelude::*;
 use tokio::timer::{Error, Interval as TokioInterval};
 
-/// Struct to allow a `Timer` dependent to run repeatedly on an interval.
+/// Struct to allow a `Times` dependent to run repeatedly on an interval.
 ///
 /// `Interval` should be derived when:
 ///   * An interval is given
@@ -20,8 +20,8 @@ pub struct Interval {
     interval: u64,
 }
 
-impl Timer for Interval {
-    /// Create a default `Interval` `Timer`.
+impl Times for Interval {
+    /// Create a default `Interval` `Times`.
     ///
     /// ```
     /// Interval {
@@ -36,7 +36,7 @@ impl Timer for Interval {
         }
     }
 
-    /// Call the dependent on `Timer`.
+    /// Call the dependent on `Times`.
     fn call<F: Fn() -> Result<(), Error> + Send + 'static>(&self, f: Box<F>) {
         let time = Instant::now() + Duration::from_millis(self.delay);
 

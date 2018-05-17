@@ -6,6 +6,7 @@ extern crate serde_derive;
 #[cfg(test)]
 extern crate serde_json;
 
+mod builder;
 mod spawn;
 mod timer;
 

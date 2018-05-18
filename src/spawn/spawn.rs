@@ -45,6 +45,28 @@ mod tests {
     use serde_json;
 
     #[test]
+    fn test_empty_with_args() {
+        let derived: Spawn = serde_json::from_str(
+            r#"{
+                "args": []
+            }"#,
+        ).unwrap();
+
+        let actual = Spawn::Command(Command::default());
+
+        assert_eq!(derived, actual);
+    }
+
+    #[test]
+    fn test_empty_without_args() {
+        let derived: Spawn = serde_json::from_str(r#"{}"#).unwrap();
+
+        let actual = Spawn::Command(Command::default());
+
+        assert_eq!(derived, actual);
+    }
+
+    #[test]
     fn test_command_with_args() {
         let derived: Spawn = serde_json::from_str(
             r#"{

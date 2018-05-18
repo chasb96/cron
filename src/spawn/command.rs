@@ -11,12 +11,17 @@ pub struct Command {
     /// The executable to call.
     /// There's only a handful of commands on all systems:
     /// Defaults to `"echo"`
+    #[serde(default = "default_command")]
     command: String,
 
     /// The arguments to pass to the executable.
     /// Defaults to an empty set, `[]`
     #[serde(default)]
     args: Vec<String>,
+}
+
+fn default_command() -> String {
+    "echo".to_string()
 }
 
 impl Spawns for Command {
@@ -50,6 +55,28 @@ impl Clone for Command {
 mod tests {
     use super::*;
     use serde_json;
+
+    #[test]
+    fn test_empty_with_args() {
+        let derived: Command = serde_json::from_str(
+            r#"{
+                "args": []
+            }"#,
+        ).unwrap();
+
+        let actual = Command::default();
+
+        assert_eq!(derived, actual);
+    }
+
+    #[test]
+    fn test_empty_without_args() {
+        let derived: Command = serde_json::from_str(r#"{}"#).unwrap();
+
+        let actual = Command::default();
+
+        assert_eq!(derived, actual);
+    }
 
     #[test]
     fn test_with_args() {

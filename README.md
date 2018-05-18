@@ -11,9 +11,9 @@ This tool is meant both to be something that actually runs and maintains itself,
 # Setting Up
 
 There are plans for the future, so currently setup looks wonky to accommodate:
-    * Ability to be built from a configuration file, instead of one singular builder file
-    * Ability to specify multiple files
-    * Desktop notifications
+* Ability to be built from a configuration file, instead of one singular builder file
+* Ability to specify multiple files
+* Desktop notifications
 
 ### Overall
 

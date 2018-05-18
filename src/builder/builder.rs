@@ -1,29 +1,13 @@
 use builder::Builds;
 use builder::worker::Worker;
-use serde_json;
 use std::error::Error;
-use std::fs::File;
-use std::path::Path;
 use tokio::runtime::Runtime;
 
 /// Builds a set of workers.
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Builder {
+    #[serde(default)]
     workers: Vec<Worker>,
-}
-
-impl Builder {
-    /// We want the ability to build a Builder from a raw file alone.
-    ///
-    /// Build a Builder from a file.
-    /// Returns Result containing Self, or Errors opening or building the Builder
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Box<Error>> {
-        let file = File::open(path)?;
-
-        let builder = serde_json::from_reader(file)?;
-
-        Ok(builder)
-    }
 }
 
 impl Default for Builder {
@@ -43,10 +27,12 @@ impl Clone for Builder {
 }
 
 impl Builds for Builder {
-    fn build(self, runtime: &mut Runtime) {
+    fn build(self, runtime: &mut Runtime) -> Result<(), Box<Error>> {
         for worker in self.workers {
-            worker.build(runtime)
+            worker.build(runtime)?;
         }
+
+        Ok(())
     }
 }
 
@@ -54,6 +40,15 @@ impl Builds for Builder {
 mod tests {
     use super::*;
     use serde_json;
+
+    #[test]
+    fn test_empty() {
+        let derived: Builder = serde_json::from_str(r#"{}"#).unwrap();
+
+        let actual = Builder::default();
+
+        assert_eq!(derived, actual);
+    }
 
     #[test]
     fn test_default() {
@@ -74,6 +69,6 @@ mod tests {
 
         let builder = Builder::default();
 
-        builder.build(&mut runtime);
+        assert!(builder.build(&mut runtime).is_ok());
     }
 }

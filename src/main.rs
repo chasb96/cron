@@ -9,8 +9,8 @@ mod builder;
 mod spawn;
 mod timer;
 
-use builder::Builder;
 use builder::Builds;
+use builder::Config;
 use std::env;
 use std::error::Error;
 use std::path::PathBuf;
@@ -20,9 +20,9 @@ use tokio::runtime::Runtime;
 fn main() -> Result<(), Box<Error>> {
     let mut runtime = Runtime::new()?;
 
-    let builder = Builder::from_file(default_path().unwrap())?;
+    let config = Config::from_file(default_path().unwrap())?;
 
-    builder.build(&mut runtime);
+    config.build(&mut runtime)?;
 
     runtime.shutdown_on_idle().wait().unwrap();
 

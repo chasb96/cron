@@ -1,5 +1,6 @@
 use builder::Builds;
 use spawn::{Spawn, Spawns};
+use std::error::Error;
 use timer::{Timer, Times};
 use tokio::runtime::Runtime;
 
@@ -17,10 +18,12 @@ pub struct Worker {
 }
 
 impl Builds for Worker {
-    fn build(self, runtime: &mut Runtime) {
+    fn build(self, runtime: &mut Runtime) -> Result<(), Box<Error>> {
         let spawn = self.spawn.clone();
 
         self.timer.time(runtime, move || spawn.spawn());
+
+        Ok(())
     }
 }
 
@@ -125,6 +128,6 @@ mod tests {
 
         let worker = Worker::default();
 
-        worker.build(&mut runtime);
+        assert!(worker.build(&mut runtime).is_ok());
     }
 }

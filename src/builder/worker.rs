@@ -49,6 +49,15 @@ mod tests {
     use timer::interval::Interval;
 
     #[test]
+    fn test_empty() {
+        let derived: Worker = serde_json::from_str(r#"{}"#).unwrap();
+
+        let actual = Worker::default();
+
+        assert_eq!(derived, actual);
+    }
+
+    #[test]
     fn test_once_with_delay() {
         let derived: Worker = serde_json::from_str(
             r#"{

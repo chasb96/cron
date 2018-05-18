@@ -50,6 +50,9 @@ They currently have the following options:
 
 ```
 {
+    "configs": [
+        "/home/user/second.json"
+    ],
     "workers": [
         {
             "delay": 1000,

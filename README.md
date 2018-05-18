@@ -15,7 +15,7 @@ There are plans for the future, so currently setup looks wonky to accommodate:
     * Ability to specify multiple files
     * Desktop notifications
 
-## Overall
+### Overall
 
 A builder file must be specified at `~/tasker.config`, containing the following:
 
@@ -27,7 +27,7 @@ A builder file must be specified at `~/tasker.config`, containing the following:
 }
 ```
 
-## Workers
+### Workers
 
 "Worker" is just an arbitrary name for anything Tasker does. They're specified as a `JSON` object.
 
@@ -43,7 +43,27 @@ They currently have the following options:
 * `"interval": <x>`
     - run the worker on an interval of `x` milliseconds
 * `"delay": <x>`
-    - wait x milliseconds before starting the worker
+    - wait `x` milliseconds before starting the worker
 * `"command": "<executable>"`,
     - the executable to call
     - This comes with an optional array `"args"` specifying the arguments to pass
+
+### Example Config File
+
+```
+{
+    "workers": [
+        {
+            "delay": 1000,
+            "interval": 5000,
+            "command": "echo",
+            "args": [
+                "Hello",
+                "World!"
+            ]
+        }
+    ]
+}
+```
+
+After waiting 1 second, prints `Hello World!` every 5 seconds.

@@ -6,12 +6,17 @@ use std::fs::File;
 use std::path::Path;
 use tokio::runtime::Runtime;
 
+/// Builds a set of workers.
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Builder {
     workers: Vec<Worker>,
 }
 
 impl Builder {
+    /// We want the ability to build a Builder from a raw file alone.
+    ///
+    /// Build a Builder from a file.
+    /// Returns Result containing Self, or Errors opening or building the Builder
     pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Box<Error>> {
         let file = File::open(path)?;
 

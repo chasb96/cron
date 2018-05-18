@@ -3,6 +3,10 @@ use spawn::{Spawn, Spawns};
 use timer::{Timer, Times};
 use tokio::runtime::Runtime;
 
+/// Struct to contain any object that can be run
+///
+/// Contains a Timer specifying when to be run,
+///   and the Spawn to be run
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Worker {
     #[serde(flatten)]

@@ -1,0 +1,18 @@
+{
+    "workers": [
+        {
+            "interval": 1000,
+            "command": "echo",
+            "args": [
+                "hello world"
+            ]
+        },
+        {
+            "interval": 2000,
+            "command": "echo",
+            "args": [
+                "it works"
+            ]
+        }
+    ]
+}

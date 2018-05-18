@@ -1,4 +1,7 @@
-pub mod worker;
+pub use self::builder::Builder;
+
+mod builder;
+mod worker;
 
 use tokio::runtime::Runtime;
 

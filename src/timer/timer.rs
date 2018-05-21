@@ -24,15 +24,13 @@ pub enum Timer {
 
 impl Times for Timer {
     /// Call dependent on `Timer`
-    fn time<F>(&self, runtime: &mut Runtime, f: F)
+    fn time<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: Fn() -> Result<(), Box<Error>> + Send + 'static,
     {
-        // Just call the variant:
-        // All `Timer` variants must impl `Times`, so we just use `.call(f)` on all variants
         match self {
-            Timer::Interval(interval) => interval.time(runtime, f),
-            Timer::Once(once) => once.time(runtime, f),
+            Timer::Interval(interval) => interval.time(runtime, closure),
+            Timer::Once(once) => once.time(runtime, closure),
         }
     }
 }

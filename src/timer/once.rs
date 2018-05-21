@@ -20,9 +20,34 @@ pub struct Once {
     delay: u64,
 }
 
-impl Once {
-    pub fn delay(&self) -> Instant {
-        Instant::now() + Duration::from_millis(self.delay)
+impl Times for Once {
+    /// Call the dependent on `Once`.
+    fn time<F>(&self, runtime: &mut Runtime, closure: F)
+    where
+        F: FnOnce() -> Result<(), Box<Error>> + Send + 'static,
+    {
+        let delay = Instant::now() + Duration::from_millis(self.delay);
+
+        let future = Delay::new(delay)
+            .and_then(|_| {
+                closure().unwrap();
+                Ok(())
+            })
+            .map_err(|e| panic!("{}: {}", OnceError.description(), e));
+
+        runtime.spawn(future);
+    }
+}
+
+impl Default for Once {
+    fn default() -> Self {
+        Once { delay: 0 }
+    }
+}
+
+impl Clone for Once {
+    fn clone(&self) -> Self {
+        Self { delay: self.delay }
     }
 }
 
@@ -38,35 +63,6 @@ impl Display for OnceError {
 impl Error for OnceError {
     fn description(&self) -> &str {
         "Failed to keep `Once` instance"
-    }
-}
-
-impl Times for Once {
-    /// Call the dependent on `Once`.
-    fn time<F>(&self, runtime: &mut Runtime, f: F)
-    where
-        F: FnOnce() -> Result<(), Box<Error>> + Send + 'static,
-    {
-        let call = Delay::new(self.delay())
-            .and_then(|_| {
-                f().unwrap();
-                Ok(())
-            })
-            .map_err(|e| panic!("{}: {}", OnceError.description(), e));
-
-        runtime.spawn(call);
-    }
-}
-
-impl Default for Once {
-    fn default() -> Self {
-        Once { delay: 0 }
-    }
-}
-
-impl Clone for Once {
-    fn clone(&self) -> Self {
-        Self { delay: self.delay }
     }
 }
 

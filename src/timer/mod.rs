@@ -13,7 +13,7 @@ use tokio::runtime::Runtime;
 /// However, since this cannot be enforced by the compiler, we will need to enforce this by hand.
 pub trait Times {
     /// Calls the dependent according to the `Times` instance.
-    fn time<F>(&self, runtime: &mut Runtime, f: F)
+    fn time<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: Fn() -> Result<(), Box<Error>> + Send + 'static;
 }

@@ -22,45 +22,24 @@ pub struct Interval {
     interval: u64,
 }
 
-#[derive(Debug)]
-struct IntervalError;
-
-impl Display for IntervalError {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult {
-        write!(f, "Failed to keep `Interval` instance")
-    }
-}
-
-impl Error for IntervalError {
-    fn description(&self) -> &str {
-        "Failed to keep `Interval` instance"
-    }
-}
-
-impl Interval {
-    pub fn delay(&self) -> Instant {
-        Instant::now() + Duration::from_millis(self.delay)
-    }
-
-    pub fn interval(&self) -> Duration {
-        Duration::from_millis(self.interval)
-    }
-}
-
 impl Times for Interval {
     /// Call the dependent on `Times`.
-    fn time<F>(&self, runtime: &mut Runtime, f: F)
+    fn time<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: Fn() -> Result<(), Box<Error>> + Send + 'static,
     {
-        let call = TokioInterval::new(self.delay(), self.interval())
+        let delay = Instant::now() + Duration::from_millis(self.delay);
+
+        let interval = Duration::from_millis(self.interval);
+
+        let future = TokioInterval::new(delay, interval)
             .for_each(move |_| {
-                f().unwrap();
+                closure().unwrap();
                 Ok(())
             })
             .map_err(|e| println!("{}: {}", IntervalError.description(), e));
 
-        runtime.spawn(call);
+        runtime.spawn(future);
     }
 }
 
@@ -79,6 +58,21 @@ impl Clone for Interval {
             delay: self.delay,
             interval: self.interval,
         }
+    }
+}
+
+#[derive(Debug)]
+struct IntervalError;
+
+impl Display for IntervalError {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "Failed to keep `Interval` instance")
+    }
+}
+
+impl Error for IntervalError {
+    fn description(&self) -> &str {
+        "Failed to keep `Interval` instance"
     }
 }
 

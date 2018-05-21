@@ -1,4 +1,5 @@
 use super::Waits;
+use super::file::File;
 use super::interval::Interval;
 use super::once::Once;
 use std::error::Error;
@@ -10,6 +11,7 @@ use tokio::runtime::Runtime;
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(untagged)]
 pub enum Listener {
+    File(File),
     Interval(Interval),
     Once(Once),
 }
@@ -22,6 +24,7 @@ impl Waits for Listener {
         match self {
             Listener::Interval(interval) => interval.wait(runtime, closure),
             Listener::Once(once) => once.wait(runtime, closure),
+            Listener::File(file) => file.wait(runtime, closure),
         }
     }
 }
@@ -37,6 +40,7 @@ impl Clone for Listener {
         match self {
             Listener::Interval(interval) => Listener::Interval(interval.clone()),
             Listener::Once(once) => Listener::Once(once.clone()),
+            Listener::File(file) => Listener::File(file.clone()),
         }
     }
 }

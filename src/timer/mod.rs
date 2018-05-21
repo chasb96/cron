@@ -7,12 +7,10 @@ pub mod timer;
 use std::error::Error;
 use tokio::runtime::Runtime;
 
-/// Trait outlining the needs for a `Times`.
-///
-/// Any `Times` must impl this trait.
-/// However, since this cannot be enforced by the compiler, we will need to enforce this by hand.
-pub trait Times {
-    /// Calls the dependent according to the `Times` instance.
+/// We want Times to impliment Default + Clone for deriving and safety issues.
+///   Default allows a useful library serde to find default values for missing information.
+///   Clone allows the Times to be used hassle-free asynchronously.
+pub trait Times: Default + Clone {
     fn time<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: Fn() -> Result<(), Box<Error>> + Send + 'static;

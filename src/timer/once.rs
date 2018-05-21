@@ -6,22 +6,13 @@ use tokio::prelude::*;
 use tokio::runtime::Runtime;
 use tokio::timer::Delay;
 
-/// Struct to allow a `Times` dependent to run once and only once.
-///
-/// `Once` should be derived when:
-///   * No specifications are given
-///   * When only a delay is given
-///   * Fallback when no other `Times`s can be derived
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Once {
-    /// How long to wait before running in `ms`.
-    /// Defaults to `0`.
     #[serde(default)]
     delay: u64,
 }
 
 impl Times for Once {
-    /// Call the dependent on `Once`.
     fn time<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: FnOnce() -> Result<(), Box<Error>> + Send + 'static,

@@ -4,17 +4,9 @@ use timer::interval::Interval;
 use timer::once::Once;
 use tokio::runtime::Runtime;
 
-/// `Enum` wrapping all the `Times`s together.
-///
-/// This derives interior `Times`s.
-/// We go down this list until we find one we can derive. We start with the most amount of information given.
-/// This behavior allows it to "fall" down the options until it finds a `Times` that works.
-///
-/// All `Times`s *must* impl the `Times` trait.
-///
-/// Derive precedence is as follows:
-///   * Interval
-///   * Once
+/// Every option in `Timer` must impl the `Times` trait...
+///   Since the compiler cannot enforce this, it must be done by hand.
+///   Without this, the code easily becomes smelly and unmanageable.
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(untagged)]
 pub enum Timer {
@@ -23,7 +15,6 @@ pub enum Timer {
 }
 
 impl Times for Timer {
-    /// Call dependent on `Timer`
     fn time<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: Fn() -> Result<(), Box<Error>> + Send + 'static,

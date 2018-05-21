@@ -20,9 +20,10 @@ impl Times for Once {
         let delay = Instant::now() + Duration::from_millis(self.delay);
 
         let future = Delay::new(delay)
-            .and_then(|_| {
-                closure().unwrap();
-                Ok(())
+            .and_then(|_| match closure() {
+                // If the command given fails, I don't want it to crash;
+                //     if it fails, the program called should handle its own
+                _ => Ok(()),
             })
             .map_err(|e| panic!("{}: {}", OnceError.description(), e));
 

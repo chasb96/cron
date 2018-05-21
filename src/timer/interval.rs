@@ -25,9 +25,10 @@ impl Times for Interval {
         let interval = Duration::from_millis(self.interval);
 
         let future = TokioInterval::new(delay, interval)
-            .for_each(move |_| {
-                closure().unwrap();
-                Ok(())
+            .for_each(move |_| match closure() {
+                // If the command given fails, I don't want it to stop;
+                //     if it fails, the program called should handle its own
+                _ => Ok(()),
             })
             .map_err(|e| println!("{}: {}", IntervalError.description(), e));
 

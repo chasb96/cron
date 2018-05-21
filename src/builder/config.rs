@@ -50,8 +50,7 @@ impl Clone for Config {
 impl Builds for Config {
     fn build(self, runtime: &mut Runtime) -> Result<(), Box<Error>> {
         for config in self.configs {
-            let built = Config::from_file(config)?;
-            built.build(runtime)?;
+            Config::from_file(config)?.build(runtime)?;
         }
 
         self.builder.build(runtime)?;

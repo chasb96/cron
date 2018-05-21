@@ -1,12 +1,26 @@
 use builder::Builds;
+use builder::FromFile;
 use builder::worker::Worker;
+use serde_json;
 use std::error::Error;
+use std::fs::File;
+use std::path::Path;
 use tokio::runtime::Runtime;
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Builder {
     #[serde(default)]
     workers: Vec<Worker>,
+}
+
+impl FromFile for Builder {
+    fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Box<Error>> {
+        let file = File::open(path)?;
+
+        let builder = serde_json::from_reader(file)?;
+
+        Ok(builder)
+    }
 }
 
 impl Builds for Builder {

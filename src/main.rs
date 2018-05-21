@@ -11,6 +11,7 @@ mod timer;
 
 use builder::Builds;
 use builder::Config;
+use builder::FromFile;
 use std::env;
 use std::error::Error;
 use std::path::PathBuf;

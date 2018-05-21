@@ -1,4 +1,5 @@
 use builder::Builds;
+use builder::FromFile;
 use builder::builder::Builder;
 use serde_json;
 use std::error::Error;
@@ -15,13 +16,13 @@ pub struct Config {
     builder: Builder,
 }
 
-impl Config {
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Box<Error>> {
+impl FromFile for Config {
+    fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Box<Error>> {
         let file = File::open(path)?;
 
-        let builder = serde_json::from_reader(file)?;
+        let config = serde_json::from_reader(file)?;
 
-        Ok(builder)
+        Ok(config)
     }
 }
 

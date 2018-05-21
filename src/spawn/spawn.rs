@@ -2,13 +2,9 @@ use spawn::Spawns;
 use spawn::command::Command;
 use std::error::Error;
 
-/// `Enum` wrapping all `Spawn`s together.
-///
-/// We use this to derive all `Spawn`s and their order.
-/// When deriving, we "fall" down this list until we can find a `Spawn` that matches.
-///
-/// Derive precedence is as follows:
-///   * Command
+/// Every option in `Spawn` must impl the `Spawns` trait.
+///   Similar to `Times`, we can't enforce this in the compiler.
+///   However, without this, it's easy for the code to become unmanageable.
 #[derive(Debug, PartialEq, Deserialize)]
 #[serde(untagged)]
 pub enum Spawn {
@@ -16,9 +12,7 @@ pub enum Spawn {
 }
 
 impl Spawns for Spawn {
-    /// Call the `Spawn`
     fn spawn(&self) -> Result<(), Box<Error>> {
-        // All vartiants impl `Spawns`, we just map each variant to `.call()`.
         match self {
             Spawn::Command(command) => command.spawn(),
         }

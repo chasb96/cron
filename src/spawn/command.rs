@@ -2,30 +2,20 @@ use spawn::Spawns;
 use std::error::Error;
 use std::process::Command as Cmd;
 
-/// Struct to create a call to another executable.
-///
-/// `Command` should be derived when:
-///   * A command is given
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Command {
-    /// The executable to call.
-    /// There's only a handful of commands on all systems:
-    /// Defaults to `"echo"`
     #[serde(default = "default_command")]
     command: String,
-
-    /// The arguments to pass to the executable.
-    /// Defaults to an empty set, `[]`
     #[serde(default)]
     args: Vec<String>,
 }
 
+/// serde derives empty string for default of String.
 fn default_command() -> String {
     "echo".to_string()
 }
 
 impl Spawns for Command {
-    /// Call the `Command`/Tell the `Command` to execute
     fn spawn(&self) -> Result<(), Box<Error>> {
         Cmd::new(&self.command).args(&self.args).spawn()?;
 

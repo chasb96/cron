@@ -1,7 +1,7 @@
+use super::Waits;
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::time::{Duration, Instant};
-use timer::Times;
 use tokio::prelude::*;
 use tokio::runtime::Runtime;
 use tokio::timer::Interval as TokioInterval;
@@ -15,8 +15,8 @@ pub struct Interval {
     interval: u64,
 }
 
-impl Times for Interval {
-    fn time<F>(&self, runtime: &mut Runtime, closure: F)
+impl Waits for Interval {
+    fn wait<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: Fn() -> Result<(), Box<Error>> + Send + 'static,
     {
@@ -107,6 +107,6 @@ mod tests {
 
         let interval = Interval::default();
 
-        interval.time(&mut runtime, || Ok(()));
+        interval.wait(&mut runtime, || Ok(()));
     }
 }

@@ -1,13 +1,13 @@
 use builder::Builds;
+use listener::{Listener, Waits};
 use spawn::{Spawn, Spawns};
 use std::error::Error;
-use timer::{Timer, Times};
 use tokio::runtime::Runtime;
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Worker {
     #[serde(flatten)]
-    pub timer: Timer,
+    pub timer: Listener,
 
     #[serde(flatten)]
     pub spawn: Spawn,
@@ -17,7 +17,7 @@ impl Builds for Worker {
     fn build(self, runtime: &mut Runtime) -> Result<(), Box<Error>> {
         let spawn = self.spawn.clone();
 
-        self.timer.time(runtime, move || spawn.spawn());
+        self.timer.wait(runtime, move || spawn.spawn());
 
         Ok(())
     }
@@ -26,7 +26,7 @@ impl Builds for Worker {
 impl Default for Worker {
     fn default() -> Self {
         Self {
-            timer: Timer::default(),
+            timer: Listener::default(),
             spawn: Spawn::default(),
         }
     }
@@ -44,8 +44,8 @@ impl Clone for Worker {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use listener::interval::Interval;
     use serde_json;
-    use timer::interval::Interval;
 
     #[test]
     fn test_empty() {
@@ -94,7 +94,7 @@ mod tests {
         ).unwrap();
 
         let actual = Worker {
-            timer: Timer::Interval(Interval::default()),
+            timer: Listener::Interval(Interval::default()),
             spawn: Spawn::default(),
         };
 
@@ -111,7 +111,7 @@ mod tests {
         ).unwrap();
 
         let actual = Worker {
-            timer: Timer::Interval(Interval::default()),
+            timer: Listener::Interval(Interval::default()),
             spawn: Spawn::default(),
         };
 

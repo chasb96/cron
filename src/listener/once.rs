@@ -1,7 +1,7 @@
+use super::Waits;
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use std::time::{Duration, Instant};
-use timer::Times;
 use tokio::prelude::*;
 use tokio::runtime::Runtime;
 use tokio::timer::Delay;
@@ -12,8 +12,8 @@ pub struct Once {
     delay: u64,
 }
 
-impl Times for Once {
-    fn time<F>(&self, runtime: &mut Runtime, closure: F)
+impl Waits for Once {
+    fn wait<F>(&self, runtime: &mut Runtime, closure: F)
     where
         F: FnOnce() -> Result<(), Box<Error>> + Send + 'static,
     {
@@ -91,6 +91,6 @@ mod tests {
 
         let once = Once::default();
 
-        once.time(&mut runtime, || Ok(()));
+        once.wait(&mut runtime, || Ok(()));
     }
 }

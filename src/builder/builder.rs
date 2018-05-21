@@ -3,11 +3,20 @@ use builder::worker::Worker;
 use std::error::Error;
 use tokio::runtime::Runtime;
 
-/// Builds a set of workers.
 #[derive(Debug, PartialEq, Deserialize)]
 pub struct Builder {
     #[serde(default)]
     workers: Vec<Worker>,
+}
+
+impl Builds for Builder {
+    fn build(self, runtime: &mut Runtime) -> Result<(), Box<Error>> {
+        for worker in self.workers {
+            worker.build(runtime)?;
+        }
+
+        Ok(())
+    }
 }
 
 impl Default for Builder {
@@ -23,16 +32,6 @@ impl Clone for Builder {
         Self {
             workers: self.workers.clone(),
         }
-    }
-}
-
-impl Builds for Builder {
-    fn build(self, runtime: &mut Runtime) -> Result<(), Box<Error>> {
-        for worker in self.workers {
-            worker.build(runtime)?;
-        }
-
-        Ok(())
     }
 }
 

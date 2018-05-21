@@ -16,10 +16,6 @@ pub struct Config {
 }
 
 impl Config {
-    /// We want the ability to build a Builder from a raw file alone.
-    ///
-    /// Build a Builder from a file.
-    /// Returns Result containing Self, or Errors opening or building the Builder
     pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, Box<Error>> {
         let file = File::open(path)?;
 

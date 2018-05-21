@@ -10,6 +10,8 @@ use tokio::timer::Interval as TokioInterval;
 pub struct Interval {
     #[serde(default)]
     delay: u64,
+
+    // Do NOT derive interval: we want to derive when this IS specified
     interval: u64,
 }
 

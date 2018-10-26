@@ -24,8 +24,7 @@ impl Waits for Once {
                 // If the command given fails, I don't want it to crash;
                 //     if it fails, the program called should handle its own
                 _ => Ok(()),
-            })
-            .map_err(|e| panic!("{}: {}", OnceError.description(), e));
+            }).map_err(|e| panic!("{}: {}", OnceError.description(), e));
 
         runtime.spawn(future);
     }

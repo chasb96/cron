@@ -2,6 +2,8 @@
 
 [![Travis Build Status](https://travis-ci.org/chasb96/tasker.svg?branch=master)](https://travis-ci.org/chasb96/tasker)
 
+> Note: This is only a proof of concept. You probably shouldn't use this legitimately. I might revisit this on a later date.
+
 Tool to delegate background tasks. Made to create and simplify scheduled commands and event-based commands/event listeners.
 
 Tasker reads from a `JSON` file configured by the user. The `JSON` file is to contain any configuration details and the commands that Tasker is meant to run. Each command will have meta associated with it instructing when to run: this can either be at a specific time, interval, event, or date.
